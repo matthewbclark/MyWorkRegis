@@ -1,0 +1,72 @@
+#This code connects to a database called hoaxy that contains fake news stories from a variety of sources, and uploads the stories to a MongoDB database.
+
+import http.client
+import json
+import requests as req
+import pandas as pd
+from pymongo import MongoClient
+
+conn = http.client.HTTPSConnection("api-hoaxy.p.rapidapi.com")
+
+def connect_to_api(conn=conn):
+    """
+    Connects to the API and retrieves the data
+    """
+    conn = http.client.HTTPSConnection("api-hoaxy.p.rapidapi.com")
+
+    headers = {
+    'x-rapidapi-host': "api-hoaxy.p.rapidapi.com",
+    'x-rapidapi-key': "afb1d49308mshf0d29cdf0f38d99p1f6d26jsn24f63cfce997"
+    }
+
+    conn.request("GET", "/top-articles?most_recent=false&exclude_tags=%5B%22satire%22%5D", headers=headers)
+
+    res = conn.getresponse()
+    data = res.read()
+    print(data.decode("utf-8"))
+    response = req.get('https://api-hoaxy.p.rapidapi.com/top-articles?most_recent=false&exclude_tags=%5B%22satire%22%5D', headers=headers)
+    print (response)
+    print (response.json())
+    articles = response.json()['articles']
+    df = pd.io.json.json_normalize(articles)
+    df['date_captured'] = pd.to_datetime(df['date_captured']).dt.tz_convert('US/Mountain')
+    #loading metadata
+    df.info()
+    #print(df)
+    return df
+connect_to_api(conn)
+
+def store_data(df):
+    client = MongoClient()
+    db = client['hoaxy'] 
+    collection = db['Latest_Articles']
+    records = df.to_dict('records')
+    count = 0
+    doc = []
+    def inner_store_data(record):
+        #This code will query the mongoDB database to see if the documents are already there
+        #{Mongo Document: Object in record dictionary, Mongo Document: Object in record dictionary}
+        myquery = {'canonical_url': record['canonical_url'], 'date_captured':record['date_captured'] }
+        x = collection.count_documents(myquery)
+        if x > 0:
+            #If it find a record matching the criteria then it will not proceed to upload the data
+            print ("This data already exists")
+        else:    
+            print ("This is new data")
+            #Inserts each qualifying record in the for loop
+            collection.insert_one(record)
+            print (collection.find_one())
+            doc.append(x)
+    #Iterates through the list of records to see if they match the documents in MongoDB
+    for record in records:
+        count = count + 1
+        inner_store_data(record)
+    print (str(count) + "documents have been checked")
+    print ((str(len(doc))) + "documents have been added")
+    client.close()
+
+if __name__ == "__main__":
+    df = connect_to_api(conn)
+    print(df.info())
+    store_data(df)
+    
