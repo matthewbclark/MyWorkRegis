@@ -1,0 +1,182 @@
+# Data uses methods by Lesmeister(2015), 
+
+library(MASS)
+library(caret)
+library(neuralnet)
+library(vcd)
+
+#Uploading the data
+BC_data<-read.csv(file.choose(), header=TRUE, sep = ",")
+head(BC_data)
+str(BC_data)
+names(BC_data)
+is.data.frame(BC_data)
+
+#Changing the names of the columns in the dataset
+names(BC_data)[1]<- "Sample.number"
+names(BC_data)[2]<- "Clump.thickness"
+names(BC_data)[3]<- "Size.Uniformity"
+names(BC_data)[4]<- "Shape.Uniformity"
+names(BC_data)[5]<- "Marginal.Adhesion"
+names(BC_data)[6]<- "Epi.Cell.Size"
+names(BC_data)[7]<- "Bare.nuclei"
+names(BC_data)[8]<- "Bland.Chromatin"
+names(BC_data)[9]<- "Normal.nucleoli"
+names(BC_data)[10]<- "Mitoses"
+names(BC_data)[11]<- "Class"
+
+head(BC_data)
+str(BC_data)
+
+#Converting the Class column's values into factors...
+#...and removing question marks from the Bare.nuclei column
+WBC_data <- BC_data
+WBC_data
+str(WBC_data)
+head(WBC_data)
+WBC_data[ ,'Class'] <- as.factor(WBC_data[ ,'Class'])
+WBC_data[ ,'Bare.nuclei']<- as.integer(WBC_data[ ,'Bare.nuclei'])
+is.data.frame(WBC_data)
+
+is.null(WBC_data$Bare.nuclei)
+str(WBC_data)
+
+#Stack Exchange code 
+WBC_data$Class <- ifelse(WBC_data$Class=='2', 'neg', ifelse(WBC_data$Class=='4','pos', 'NA'))
+is.na(WBC_data)
+
+WBC_data
+
+#Saving the data to the hard drive
+# Lesmeister, 2015, Ch. 7
+getwd()
+write.csv(WBC_data, file="C:/Users/Matt/Documents/College_Assignments_Regis/Predictive_Analytics/Week_Eight/Final_Project/WBCDF.csv", row.names=FALSE)
+
+#Upload h2o
+library(h2o)
+localH2O <- h2o.init()
+h2o.getConnection()
+
+#Creating a file path
+# Lesmeister, 2015, Ch. 7
+path <- "C:/Users/Matt/Documents/College_Assignments_Regis/Predictive_Analytics/Week_Eight/Final_Project/WBCDF.csv"
+WBCDF.hex <- h2o.uploadFile(path=path, destination_frame="WBCDF.hex")
+
+#varifying it is in the H2OFrame
+# Lesmeister, 2015, Ch. 7
+class(WBCDF.hex)
+str(WBCDF.hex)
+head(WBCDF.hex)
+WBCDF.hex
+
+#Producing Training and Testing Data
+# Lesmeister, 2015, Ch. 7
+
+#Create a set of random samples to test
+# Based on Lesmeister, 2015, Ch.7
+random <- h2o.runif(WBCDF.hex, seed = 123)
+
+#Data Prep Techniques taken from: 
+# Dancho and H2O.ai, Dec 11, 2017
+split_WBC <- h2o.splitFrame(WBCDF.hex, c(0.7, 0.15), seed = 1234)
+
+train_WBC_h2o <- h2o.assign(split_WBC[[1]], "train" ) # 70%
+valid_WBC_h2o <- h2o.assign(split_WBC[[2]], "valid" ) # 15%
+test_WBC_h2o <- h2o.assign(split_WBC[[3]], "test"  ) # 15%
+
+# Lesmeister, 2015, Ch. 7
+h2o.table(train_WBC_h2o[,11])
+h2o.table(valid_WBC_h2o[,11])
+h2o.table(test_WBC_h2o[,11])
+
+#Using the h2o.deeplearning() function to build and test the model for 10 epochs (default)
+# Based on Lesmeister, 2015, Ch.7
+WBC_model <- h2o.deeplearning(x=2:10, y=11, training_frame = train_WBC_h2o, validation_frame = valid_WBC_h2o, seed = 123, variable_importances = TRUE)
+WBC_model
+h2o.performance(WBC_model, valid = TRUE)
+#Looking at all parameters used in the model
+WBC_model@allparameters
+
+#Importance values for variables used in the model
+WBC_model@model$variable_importances
+
+#See predicted values 
+WBC_Predict <- h2o.predict(WBC_model, newdata=test_WBC_h2o)
+WBC_Predict
+
+# Creating a table of predicted values
+WBCPred <- as.data.frame(WBC_Predict)
+head(WBCPred)
+#WBCPred[1:50,]
+
+#Taken from Leal and Dey, September, 12th, 2018
+# Table
+table(WBCPred$predict)
+h2o.table(test_WBC_h2o[,11])
+
+
+#H2O.ai, Ch. 4, n.d.
+ep <- c(1,250,500,750)
+
+#Testing the model with one epoch
+WBC_ep1 <- h2o.deeplearning(x=2:10, y=11, training_frame = train_WBC_h2o, validation_frame = valid_WBC_h2o, seed = 123, variable_importances = TRUE, epochs = ep[1])
+WBC_ep1
+h2o.performance(WBC_ep1, valid = TRUE)
+#   See predicted values 
+WBC_ep1_Predict <- h2o.predict(WBC_ep1, newdata=test_WBC_h2o)
+#   Creating a table of predicted values
+WBCPred_ep1 <- as.data.frame(WBC_ep1_Predict)
+head(WBCPred_ep1)
+#Taken from Leal and Dey, September, 12th, 2018
+table(WBCPred_ep1$predict)
+h2o.table(test_WBC_h2o[,11])
+
+#250 epochs
+WBC_ep250 <- h2o.deeplearning(x=2:10, y=11, training_frame = train_WBC_h2o, validation_frame = valid_WBC_h2o, seed = 123, variable_importances = TRUE, epochs = ep[2])
+WBC_ep250
+h2o.performance(WBC_ep250, valid = TRUE)
+#   See predicted values 
+WBC_ep250_Predict <- h2o.predict(WBC_ep250, newdata=test_WBC_h2o)
+#   Creating a table of predicted values
+WBCPred_ep250 <- as.data.frame(WBC_ep250_Predict)
+head(WBCPred_ep250)
+#Taken from Leal and Dey, September, 12th, 2018
+# Table
+table(WBCPred_ep250$predict)
+h2o.table(test_WBC_h2o[,11])
+
+#500 epochs
+WBC_ep500 <- h2o.deeplearning(x=2:10, y=11, training_frame = train_WBC_h2o, validation_frame = valid_WBC_h2o, seed = 123, variable_importances = TRUE, epochs = ep[3])
+WBC_ep500
+h2o.performance(WBC_ep500, valid = TRUE)
+#   See predicted values 
+WBC_ep500_Predict <- h2o.predict(WBC_ep500, newdata=test_WBC_h2o)
+#   Creating a table of predicted values
+WBCPred_ep500 <- as.data.frame(WBC_ep500_Predict)
+head(WBCPred_ep500)
+#Taken from Leal and Dey, September, 12th, 2018
+table(WBCPred_ep500$predict)
+h2o.table(test_WBC_h2o[,11])
+
+#750 epochs
+WBC_ep750 <- h2o.deeplearning(x=2:10, y=11, training_frame = train_WBC_h2o, validation_frame = valid_WBC_h2o, seed = 123, variable_importances = TRUE, epochs = ep[4])
+WBC_ep750
+h2o.performance(WBC_ep750, valid = TRUE)
+#   See predicted values 
+WBC_ep750_Predict <- h2o.predict(WBC_ep750, newdata=test_WBC_h2o)
+#   Creating a table of predicted values
+WBCPred_ep750 <- as.data.frame(WBC_ep750_Predict)
+head(WBCPred_ep750)
+#Taken from Leal and Dey, September, 12th, 2018
+# Table
+table(WBCPred_ep750$predict)
+h2o.table(test_WBC_h2o[,11])
+
+# Bibliography: 
+# Wolberg, William H. Phd. (1992-07-15) Best Cancer Wisconsin (Original) Data Set. [csv file] Retrieved from: https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Original)
+# Lesmeister, C (2015). Mastering Machine Learning with R. Birmingham, UK:: Packt Publishing, Ltd 
+# H2O.ai (n.d.) H2O Tutorials: Classification and Regression with H2O Deep Learning. [Tutorial] Retrieved from: http://docs.h2o.ai/h2o-tutorials/latest-stable/resources.html
+# StackExchange (April, 2018) Replacing words by numbers in multiple columns of a data frame in R. Retrieved from: https://datascience.stackexchange.com/questions/29673/replacing-words-by-numbers-in-multiple-columns-of-a-data-frame-in-r
+# Leal, David and Dey, Sandipan (September 12th, 2018) How to interpret the probabilities (p0, p1) of the result of h2o.predict() Retrieved from: https://stackoverflow.com/questions/52304696/how-to-interpret-the-probabilities-p0-p1-of-the-result-of-h2o-predict
+# Candel, Arno, LeDell, Erin, and Bartz, Angela. (December 19th, 2019) Deep Learning with H2O. Retrieved from: http://docs.h2o.ai/h2o/latest-stable/h2o-docs/booklets/DeepLearningBooklet.pdf
+# Dancho, Matt, H2O.ai (December 11th, 2017) HR Analytics: Using Machine Learning to Predict Employee Turnover. Retrieved from: https://www.youtube.com/watch?v=-qfEOwm5Th4
