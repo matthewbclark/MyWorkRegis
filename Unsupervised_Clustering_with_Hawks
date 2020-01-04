@@ -1,0 +1,39 @@
+library(devtools)
+library(ggvis)
+library(gmodels)
+library(tidyverse)
+hawk<-read.csv(file.choose(), header=TRUE, sep = ",")
+View(hawk)
+#All "NA" values must be removed for the machine learning operation to work. 
+#Immature individuals may overlap in size with other species, so only the adults will be used
+FilterHawk = subset(hawk, Age == "A" & Weight != "NA" & Wing != "NA")
+FilterHawk
+HawkSelect<- FilterHawk %>% select("Species", "Wing", "Weight")
+HawkSelect
+summary(HawkSelect)
+View(HawkSelect)
+set.seed(30)
+#Beginning the operation for kmeans
+km<-kmeans(HawkSelect[,2:3], 3, nstart = 30)
+km
+#Graphing the results
+table(km$cluster, HawkSelect$Species)
+#Plotting the results
+plot(HawkSelect[,2], HawkSelect[,3], col=km$cluster)
+#Finding the centers of the results
+points(km$centers[,c(1,2)], col=1:3, pch=8, cex=2)
+#Did it detect size differences between the 121 red tailed hawks in the sample?
+
+#Running the operation with 4 centroids
+km<-kmeans(HawkSelect[,2:3], 4, nstart = 30)
+km
+table(km$cluster, HawkSelect$Species)
+plot(HawkSelect[,2], HawkSelect[,3], col=km$cluster)
+points(km$centers[,c(1,2)], col=1:3, pch=8, cex=2)
+
+#Running the operation with 6 centroids
+km<-kmeans(HawkSelect[,2:3], 6, nstart = 30)
+km
+table(km$cluster, HawkSelect$Species)
+plot(HawkSelect[,2], HawkSelect[,3], col=km$cluster)
+points(km$centers[,c(1,2)], col=1:3, pch=8, cex=2)
