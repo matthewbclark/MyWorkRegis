@@ -1,0 +1,67 @@
+#Performing the text mining analysis on Beowulf
+
+folder1 = 'C:/Users/Matt/Documents/College_Assignments_Regis/Data_Analytics/Week_Six/'
+f = open(folder1 + 'Beowulf.txt', 'r').read()
+import nltk
+import string, re, operator
+from nltk.corpus import stopwords
+f = f.lower()
+beowulf = f
+beowulf[:50]
+beowulf = re.split(r'\W+', beowulf)
+beowulf[:50]
+# makes sure I absolutely have the stopwords no matter what
+stop = stopwords.words('english')
+beowulf = [ j for j in beowulf if j not in stop] 
+beowulf[:50]
+remove_list = ['gutenberg', 'ebook', 'www', 'online']  
+beowulf = [ j for j in beowulf if j not in remove_list] 
+beowulf[:50]
+new_beowulf = {}
+for new_word in beowulf:
+    if new_word in new_beowulf:
+        new_beowulf[new_word] += 1
+    else:
+        new_beowulf[new_word] = 1
+
+sorted_new_beowulf = sorted(new_beowulf.items(), key=operator.itemgetter(1), reverse = True)  
+npopular = 25
+x = range(npopular)
+y = []
+for pair in range(npopular):
+     y=y + [sorted_new_beowulf[pair][1]]
+     print (sorted_new_beowulf[pair])
+
+#Performing the text mining analysis on the Volsunga Saga
+
+folder2 = 'C:/Users/Matt/Documents/College_Assignments_Regis/Data_Analytics/Week_Six/'
+f = open(folder2 + 'Volsungs.txt', 'r').read()
+import nltk
+import string, re, operator
+from nltk.corpus import stopwords
+f = f.lower()
+volsungs = f
+volsungs[:50]
+volsungs = re.split(r'\W+', volsungs)
+volsungs[:50]
+# makes sure I absolutely have the stopwords no matter what
+stop = stopwords.words('english')
+volsungs = [ j for j in volsungs if j not in stop] 
+volsungs[:50]
+remove_list = ['gutenberg', 'ebook', 'www', 'online']  
+volsungs = [ j for j in volsungs if j not in remove_list] 
+volsungs[:50]
+new_volsungs = {}
+for new_word in volsungs:
+    if new_word in new_volsungs:
+        new_volsungs[new_word] += 1
+    else:
+        new_volsungs[new_word] = 1
+
+sorted_new_volsungs = sorted(new_volsungs.items(), key=operator.itemgetter(1), reverse = True)  
+npopular = 25
+x = range(npopular)
+y = []
+for pair in range(npopular):
+     y=y + [sorted_new_volsungs[pair][1]]
+     print (sorted_new_volsungs[pair])
