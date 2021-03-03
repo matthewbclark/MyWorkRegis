@@ -19,11 +19,356 @@ All data needed to be converted to the North America Lambert Conformal Conic pro
 
 The BISON data included sightings of both the western and meadow jumping mice, and these shapefiles needed to be converted to the Lambert Conformal Conic coordinate system and then combined using the *merge* function. Because the datasets all contained the same columns, this was actually very easy. Buffers were calculated at a distance of  340-meters as per the observations of Trainor et. al. 2012. The *zonal histogram* function was then used to perform a count of the number of pixels in each land cover type that overlapped with each buffer polygon. These values came from approximately 28 square-meter cells that would later be multiplied by 28 with Pandas to produce the area in square-meters of each habitat type within each buffer. The *zonal statistics* function was used to find the average distance value in 10x10 square meter pixels from a river within each buffer. This value would later be multiplied by 10 to estimate the average distance in square meters from rivers within the buffer. The zonal statistics function would also perform a similar operation to determine the average elevation in meters within each buffer.
 
+
+
+### Modules used in this project
+
+**Pandas**
+
+**numpy**
+
+**seaborn**
+
+**numpy**
+
+**IPython**
+
+**Matplotlib**
+
+**sklearn**
+sklearn functions include train_test_split, accuracy_score, svm, metrics, cross_val_score, DecisionTreeClassifier, FactorAnalysis
+
 **Preparing the Data**
 
 Data preparation involved exporting the data from the final data's attribute table as a .csv file, and then using Pandas to edit the data. This involved creating a list of new names for the subsequent columns in the dataset and applying them with the .columns function. As the data was prepared in QGIS, it was not necessary to fill in columns with missing data. Lambda functions were then used to further edit the data. Some points fell outside of the scope of the NLCD and had a value of NoData in some or all of their buffers. To fix this problem, these cells were multiplied by zero in the lambda functions so that this column would not interfere with data analysis. Each column for land cover in the NLCD had counts of approximately 28 square meter cells, so each column needed to be multiplied by 28. The finest resolution possible for the distance from rivers were 10 square meter cells, so the values in this column needed to be multiplied by 10. 
 
 
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>fid</th>
+      <th>bisonID</th>
+      <th>ITISsciNme</th>
+      <th>xcoord</th>
+      <th>ycoord</th>
+      <th>nlcdb2011_0</th>
+      <th>nlcdb2011_11</th>
+      <th>nlcdb2011_21</th>
+      <th>nlcdb2011_22</th>
+      <th>nlcdb2011_23</th>
+      <th>...</th>
+      <th>nlcdb2011_42</th>
+      <th>nlcdb2011_43</th>
+      <th>nlcdb2011_52</th>
+      <th>nlcdb2011_71</th>
+      <th>nlcdb2011_81</th>
+      <th>nlcdb2011_82</th>
+      <th>nlcdb2011_90</th>
+      <th>nlcdb2011_95</th>
+      <th>riverdist_decameters_mean</th>
+      <th>Ele_meters_mean</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>1061284029</td>
+      <td>Zapus princeps</td>
+      <td>-1.048927e+06</td>
+      <td>34400.810906</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>263</td>
+      <td>0</td>
+      <td>36</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>18.462810</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>897076990</td>
+      <td>Zapus princeps</td>
+      <td>-8.852860e+05</td>
+      <td>161407.789815</td>
+      <td>9</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>12</td>
+      <td>0</td>
+      <td>116</td>
+      <td>0</td>
+      <td>132</td>
+      <td>0</td>
+      <td>87</td>
+      <td>0</td>
+      <td>13.076882</td>
+      <td>1362.505689</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>897077009</td>
+      <td>Zapus princeps</td>
+      <td>-8.852860e+05</td>
+      <td>161407.789815</td>
+      <td>9</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>12</td>
+      <td>0</td>
+      <td>116</td>
+      <td>0</td>
+      <td>132</td>
+      <td>0</td>
+      <td>87</td>
+      <td>0</td>
+      <td>13.076882</td>
+      <td>1362.505689</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+      <td>897077028</td>
+      <td>Zapus princeps</td>
+      <td>-8.852860e+05</td>
+      <td>161407.789815</td>
+      <td>9</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>12</td>
+      <td>0</td>
+      <td>116</td>
+      <td>0</td>
+      <td>132</td>
+      <td>0</td>
+      <td>87</td>
+      <td>0</td>
+      <td>13.076882</td>
+      <td>1362.505689</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5</td>
+      <td>1837315390</td>
+      <td>Zapus princeps</td>
+      <td>-8.850253e+05</td>
+      <td>161374.025382</td>
+      <td>7</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>22</td>
+      <td>0</td>
+      <td>187</td>
+      <td>0</td>
+      <td>54</td>
+      <td>0</td>
+      <td>83</td>
+      <td>0</td>
+      <td>20.020843</td>
+      <td>1372.888781</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>397</th>
+      <td>398</td>
+      <td>1145109121</td>
+      <td>Zapus hudsonius</td>
+      <td>-7.269401e+05</td>
+      <td>-19090.725997</td>
+      <td>0</td>
+      <td>0</td>
+      <td>36</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>96</td>
+      <td>247</td>
+      <td>0</td>
+      <td>0</td>
+      <td>58</td>
+      <td>0</td>
+      <td>13.668359</td>
+      <td>1761.247582</td>
+    </tr>
+    <tr>
+      <th>398</th>
+      <td>399</td>
+      <td>1145109130</td>
+      <td>Zapus hudsonius</td>
+      <td>-7.269401e+05</td>
+      <td>-19090.725997</td>
+      <td>0</td>
+      <td>0</td>
+      <td>36</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>96</td>
+      <td>247</td>
+      <td>0</td>
+      <td>0</td>
+      <td>58</td>
+      <td>0</td>
+      <td>13.668359</td>
+      <td>1761.247582</td>
+    </tr>
+    <tr>
+      <th>399</th>
+      <td>400</td>
+      <td>1145109134</td>
+      <td>Zapus hudsonius</td>
+      <td>-7.269401e+05</td>
+      <td>-19090.725997</td>
+      <td>0</td>
+      <td>0</td>
+      <td>36</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>96</td>
+      <td>247</td>
+      <td>0</td>
+      <td>0</td>
+      <td>58</td>
+      <td>0</td>
+      <td>13.668359</td>
+      <td>1761.247582</td>
+    </tr>
+    <tr>
+      <th>400</th>
+      <td>401</td>
+      <td>1145109154</td>
+      <td>Zapus hudsonius</td>
+      <td>-7.269401e+05</td>
+      <td>-19090.725997</td>
+      <td>0</td>
+      <td>0</td>
+      <td>36</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>96</td>
+      <td>247</td>
+      <td>0</td>
+      <td>0</td>
+      <td>58</td>
+      <td>0</td>
+      <td>13.668359</td>
+      <td>1761.247582</td>
+    </tr>
+    <tr>
+      <th>401</th>
+      <td>402</td>
+      <td>1145109161</td>
+      <td>Zapus hudsonius</td>
+      <td>-7.269401e+05</td>
+      <td>-19090.725997</td>
+      <td>0</td>
+      <td>0</td>
+      <td>36</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>96</td>
+      <td>247</td>
+      <td>0</td>
+      <td>0</td>
+      <td>58</td>
+      <td>0</td>
+      <td>13.668359</td>
+      <td>1761.247582</td>
+    </tr>
+  </tbody>
+</table>
+<p>402 rows × 23 columns</p>
+</div>
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
 </style>
 <table border="1" class="dataframe">
   <thead>
@@ -323,6 +668,20 @@ Data preparation involved exporting the data from the final data's attribute tab
 </div>
 
 
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -626,7 +985,260 @@ Data preparation involved exporting the data from the final data's attribute tab
 
 Data exploration was done with the Seaborn, Matplotlib and IPython modules. Creating these plots relied on seperating numerical data for land cover types, elevations and river distances using the .iloc[] function from Pandas. The pair plot was created Seaborn's pairplot() function. In contrast, the heat map involved converting the dataframe into an array, and then using Seaborn's heatmap function combined with a corr() function using techniques from Anita (2019). 
 
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Species</th>
+      <th>Dev_open_space</th>
+      <th>Dev_low</th>
+      <th>Dev_medium</th>
+      <th>Dev_high</th>
+      <th>Barren_land</th>
+      <th>Deci_forest</th>
+      <th>Conifer_forest</th>
+      <th>Mixed_forest</th>
+      <th>Shrubland</th>
+      <th>Grassland</th>
+      <th>Pasture</th>
+      <th>Agriculture</th>
+      <th>Wetlands_woody</th>
+      <th>Wetlands_herb</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Zapus princeps</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3948</td>
+      <td>7364</td>
+      <td>0</td>
+      <td>1008</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Zapus princeps</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2156</td>
+      <td>336</td>
+      <td>0</td>
+      <td>3248</td>
+      <td>0</td>
+      <td>3696</td>
+      <td>0</td>
+      <td>2436</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Zapus princeps</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2156</td>
+      <td>336</td>
+      <td>0</td>
+      <td>3248</td>
+      <td>0</td>
+      <td>3696</td>
+      <td>0</td>
+      <td>2436</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Zapus princeps</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2156</td>
+      <td>336</td>
+      <td>0</td>
+      <td>3248</td>
+      <td>0</td>
+      <td>3696</td>
+      <td>0</td>
+      <td>2436</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Zapus princeps</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2324</td>
+      <td>616</td>
+      <td>0</td>
+      <td>5236</td>
+      <td>0</td>
+      <td>1512</td>
+      <td>0</td>
+      <td>2324</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>397</th>
+      <td>Zapus hudsonius</td>
+      <td>1008</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2688</td>
+      <td>6916</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1624</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>398</th>
+      <td>Zapus hudsonius</td>
+      <td>1008</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2688</td>
+      <td>6916</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1624</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>399</th>
+      <td>Zapus hudsonius</td>
+      <td>1008</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2688</td>
+      <td>6916</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1624</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>400</th>
+      <td>Zapus hudsonius</td>
+      <td>1008</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2688</td>
+      <td>6916</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1624</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>401</th>
+      <td>Zapus hudsonius</td>
+      <td>1008</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2688</td>
+      <td>6916</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1624</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+<p>402 rows × 15 columns</p>
+</div>
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -881,16 +1493,9 @@ Data exploration was done with the Seaborn, Matplotlib and IPython modules. Crea
 **Results for Data Explortation**
 
 The shear number of variables made interpreting the pairplot difficult. Many variables had skewed distributions due to the high number of zero values. It is hoped that the large sample sizes will be sufficient to balance for this effect. Strong relationships between the different development types were detected in both the correlation matrix with a heatmap and with the pairplot. The heat map in particular showed a strong relationship between open space development and low developed areas, medium development and high development areas and between river distance and grasslands. The final correlation is likely due to the fact that many Preble's jumping mouse sightings were found in grasslands within 320 meters from water, as observed in Trainor et. al. (2012). A correlation between mixed forest and decidous forest was also observed. Coniferous forest correlated heavily in a positive way to elevation and strongly in a negative way to grasslands. This is not surprising as the two habitat types are found at different elevations. 
-
-
-
-
-
     
-![png](output_18_0.png)
+![png](output_21_0.png)
     
-
-
 
 
     <AxesSubplot:>
@@ -899,22 +1504,417 @@ The shear number of variables made interpreting the pairplot difficult. Many var
 
 
     
-![png](output_20_1.png)
+![png](output_23_1.png)
     
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Open_water</th>
+      <th>Dev_open_space</th>
+      <th>Dev_low</th>
+      <th>Dev_medium</th>
+      <th>Dev_high</th>
+      <th>Barren_land</th>
+      <th>Deci_forest</th>
+      <th>Conifer_forest</th>
+      <th>Mixed_forest</th>
+      <th>Shrubland</th>
+      <th>Grassland</th>
+      <th>Pasture</th>
+      <th>Agriculture</th>
+      <th>Wetlands_woody</th>
+      <th>Wetlands_herb</th>
+      <th>River_Distance</th>
+      <th>Elevation</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Open_water</th>
+      <td>1.000000</td>
+      <td>-0.036538</td>
+      <td>0.021182</td>
+      <td>0.004826</td>
+      <td>-0.006283</td>
+      <td>0.144318</td>
+      <td>-0.018428</td>
+      <td>-0.020311</td>
+      <td>-0.011812</td>
+      <td>-0.080906</td>
+      <td>-0.045913</td>
+      <td>0.028194</td>
+      <td>0.095883</td>
+      <td>0.135825</td>
+      <td>-0.016493</td>
+      <td>-0.056878</td>
+      <td>0.042670</td>
+    </tr>
+    <tr>
+      <th>Dev_open_space</th>
+      <td>-0.036538</td>
+      <td>1.000000</td>
+      <td>0.569501</td>
+      <td>0.375584</td>
+      <td>0.005372</td>
+      <td>0.092142</td>
+      <td>-0.240566</td>
+      <td>-0.154506</td>
+      <td>-0.166893</td>
+      <td>-0.188156</td>
+      <td>-0.055796</td>
+      <td>0.069983</td>
+      <td>0.062039</td>
+      <td>0.216518</td>
+      <td>0.440834</td>
+      <td>-0.166596</td>
+      <td>-0.155284</td>
+    </tr>
+    <tr>
+      <th>Dev_low</th>
+      <td>0.021182</td>
+      <td>0.569501</td>
+      <td>1.000000</td>
+      <td>0.679961</td>
+      <td>0.145106</td>
+      <td>-0.019672</td>
+      <td>-0.177684</td>
+      <td>-0.250567</td>
+      <td>-0.100186</td>
+      <td>-0.110592</td>
+      <td>-0.061569</td>
+      <td>0.009865</td>
+      <td>0.235022</td>
+      <td>0.081827</td>
+      <td>0.390990</td>
+      <td>-0.125091</td>
+      <td>-0.210519</td>
+    </tr>
+    <tr>
+      <th>Dev_medium</th>
+      <td>0.004826</td>
+      <td>0.375584</td>
+      <td>0.679961</td>
+      <td>1.000000</td>
+      <td>0.644879</td>
+      <td>-0.005309</td>
+      <td>-0.135071</td>
+      <td>-0.198269</td>
+      <td>-0.075286</td>
+      <td>-0.132820</td>
+      <td>-0.105259</td>
+      <td>0.006409</td>
+      <td>0.055239</td>
+      <td>0.044841</td>
+      <td>0.170482</td>
+      <td>-0.044876</td>
+      <td>-0.150872</td>
+    </tr>
+    <tr>
+      <th>Dev_high</th>
+      <td>-0.006283</td>
+      <td>0.005372</td>
+      <td>0.145106</td>
+      <td>0.644879</td>
+      <td>1.000000</td>
+      <td>-0.010526</td>
+      <td>-0.058957</td>
+      <td>-0.086835</td>
+      <td>-0.029668</td>
+      <td>-0.089826</td>
+      <td>-0.079595</td>
+      <td>-0.025843</td>
+      <td>-0.000749</td>
+      <td>-0.041685</td>
+      <td>-0.030765</td>
+      <td>0.023966</td>
+      <td>-0.072088</td>
+    </tr>
+    <tr>
+      <th>Barren_land</th>
+      <td>0.144318</td>
+      <td>0.092142</td>
+      <td>-0.019672</td>
+      <td>-0.005309</td>
+      <td>-0.010526</td>
+      <td>1.000000</td>
+      <td>-0.035945</td>
+      <td>0.050467</td>
+      <td>-0.029884</td>
+      <td>-0.096226</td>
+      <td>-0.048178</td>
+      <td>-0.027834</td>
+      <td>-0.007122</td>
+      <td>-0.009112</td>
+      <td>-0.034465</td>
+      <td>-0.050859</td>
+      <td>0.204099</td>
+    </tr>
+    <tr>
+      <th>Deci_forest</th>
+      <td>-0.018428</td>
+      <td>-0.240566</td>
+      <td>-0.177684</td>
+      <td>-0.135071</td>
+      <td>-0.058957</td>
+      <td>-0.035945</td>
+      <td>1.000000</td>
+      <td>-0.079970</td>
+      <td>0.506314</td>
+      <td>-0.080500</td>
+      <td>-0.344262</td>
+      <td>-0.015278</td>
+      <td>-0.036849</td>
+      <td>-0.101884</td>
+      <td>-0.192160</td>
+      <td>-0.211640</td>
+      <td>0.290375</td>
+    </tr>
+    <tr>
+      <th>Conifer_forest</th>
+      <td>-0.020311</td>
+      <td>-0.154506</td>
+      <td>-0.250567</td>
+      <td>-0.198269</td>
+      <td>-0.086835</td>
+      <td>0.050467</td>
+      <td>-0.079970</td>
+      <td>1.000000</td>
+      <td>0.046850</td>
+      <td>-0.105764</td>
+      <td>-0.546043</td>
+      <td>-0.135393</td>
+      <td>-0.056068</td>
+      <td>-0.067948</td>
+      <td>-0.283852</td>
+      <td>-0.167159</td>
+      <td>0.515689</td>
+    </tr>
+    <tr>
+      <th>Mixed_forest</th>
+      <td>-0.011812</td>
+      <td>-0.166893</td>
+      <td>-0.100186</td>
+      <td>-0.075286</td>
+      <td>-0.029668</td>
+      <td>-0.029884</td>
+      <td>0.506314</td>
+      <td>0.046850</td>
+      <td>1.000000</td>
+      <td>-0.188500</td>
+      <td>-0.229213</td>
+      <td>0.010897</td>
+      <td>-0.018883</td>
+      <td>-0.091582</td>
+      <td>-0.096215</td>
+      <td>-0.123846</td>
+      <td>0.236488</td>
+    </tr>
+    <tr>
+      <th>Shrubland</th>
+      <td>-0.080906</td>
+      <td>-0.188156</td>
+      <td>-0.110592</td>
+      <td>-0.132820</td>
+      <td>-0.089826</td>
+      <td>-0.096226</td>
+      <td>-0.080500</td>
+      <td>-0.105764</td>
+      <td>-0.188500</td>
+      <td>1.000000</td>
+      <td>-0.289694</td>
+      <td>-0.073769</td>
+      <td>-0.058049</td>
+      <td>-0.199858</td>
+      <td>-0.132898</td>
+      <td>-0.380409</td>
+      <td>-0.333746</td>
+    </tr>
+    <tr>
+      <th>Grassland</th>
+      <td>-0.045913</td>
+      <td>-0.055796</td>
+      <td>-0.061569</td>
+      <td>-0.105259</td>
+      <td>-0.079595</td>
+      <td>-0.048178</td>
+      <td>-0.344262</td>
+      <td>-0.546043</td>
+      <td>-0.229213</td>
+      <td>-0.289694</td>
+      <td>1.000000</td>
+      <td>-0.182204</td>
+      <td>-0.030132</td>
+      <td>-0.168646</td>
+      <td>0.119018</td>
+      <td>0.680129</td>
+      <td>-0.261759</td>
+    </tr>
+    <tr>
+      <th>Pasture</th>
+      <td>0.028194</td>
+      <td>0.069983</td>
+      <td>0.009865</td>
+      <td>0.006409</td>
+      <td>-0.025843</td>
+      <td>-0.027834</td>
+      <td>-0.015278</td>
+      <td>-0.135393</td>
+      <td>0.010897</td>
+      <td>-0.073769</td>
+      <td>-0.182204</td>
+      <td>1.000000</td>
+      <td>-0.008852</td>
+      <td>0.304479</td>
+      <td>-0.016719</td>
+      <td>-0.094673</td>
+      <td>-0.129430</td>
+    </tr>
+    <tr>
+      <th>Agriculture</th>
+      <td>0.095883</td>
+      <td>0.062039</td>
+      <td>0.235022</td>
+      <td>0.055239</td>
+      <td>-0.000749</td>
+      <td>-0.007122</td>
+      <td>-0.036849</td>
+      <td>-0.056068</td>
+      <td>-0.018883</td>
+      <td>-0.058049</td>
+      <td>-0.030132</td>
+      <td>-0.008852</td>
+      <td>1.000000</td>
+      <td>0.172482</td>
+      <td>0.010176</td>
+      <td>-0.041043</td>
+      <td>-0.076413</td>
+    </tr>
+    <tr>
+      <th>Wetlands_woody</th>
+      <td>0.135825</td>
+      <td>0.216518</td>
+      <td>0.081827</td>
+      <td>0.044841</td>
+      <td>-0.041685</td>
+      <td>-0.009112</td>
+      <td>-0.101884</td>
+      <td>-0.067948</td>
+      <td>-0.091582</td>
+      <td>-0.199858</td>
+      <td>-0.168646</td>
+      <td>0.304479</td>
+      <td>0.172482</td>
+      <td>1.000000</td>
+      <td>0.161338</td>
+      <td>-0.203844</td>
+      <td>-0.079098</td>
+    </tr>
+    <tr>
+      <th>Wetlands_herb</th>
+      <td>-0.016493</td>
+      <td>0.440834</td>
+      <td>0.390990</td>
+      <td>0.170482</td>
+      <td>-0.030765</td>
+      <td>-0.034465</td>
+      <td>-0.192160</td>
+      <td>-0.283852</td>
+      <td>-0.096215</td>
+      <td>-0.132898</td>
+      <td>0.119018</td>
+      <td>-0.016719</td>
+      <td>0.010176</td>
+      <td>0.161338</td>
+      <td>1.000000</td>
+      <td>-0.185898</td>
+      <td>-0.181274</td>
+    </tr>
+    <tr>
+      <th>River_Distance</th>
+      <td>-0.056878</td>
+      <td>-0.166596</td>
+      <td>-0.125091</td>
+      <td>-0.044876</td>
+      <td>0.023966</td>
+      <td>-0.050859</td>
+      <td>-0.211640</td>
+      <td>-0.167159</td>
+      <td>-0.123846</td>
+      <td>-0.380409</td>
+      <td>0.680129</td>
+      <td>-0.094673</td>
+      <td>-0.041043</td>
+      <td>-0.203844</td>
+      <td>-0.185898</td>
+      <td>1.000000</td>
+      <td>-0.186060</td>
+    </tr>
+    <tr>
+      <th>Elevation</th>
+      <td>0.042670</td>
+      <td>-0.155284</td>
+      <td>-0.210519</td>
+      <td>-0.150872</td>
+      <td>-0.072088</td>
+      <td>0.204099</td>
+      <td>0.290375</td>
+      <td>0.515689</td>
+      <td>0.236488</td>
+      <td>-0.333746</td>
+      <td>-0.261759</td>
+      <td>-0.129430</td>
+      <td>-0.076413</td>
+      <td>-0.079098</td>
+      <td>-0.181274</td>
+      <td>-0.186060</td>
+      <td>1.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
 
 
 **Creating the SVM model and Displaying the Results**
 
 The actual SVM model was created using code from the YouTube channel CMS WisCon (April 30, 2020). This source was chosen because this was the first time I created an SVM using Python, and I was having difficulty creating the model from a Pandas dataframe. The first step involved creating a random seed for the model using numpy's random.seed() function. Then the model was converted to an array using the .values function. Testing and training datasets were created from the original dataframe. The training data including values for the land area in square meters of different habitat types, the distance in rivers in meters and the elevation of the habitat. Latitude and longitude were left out due to the great difference in orders of magnitude of the data. The colunm for species was used for the dependent variable as it contained the species of the mouse included in the data point. The train_test_split() function from sklearn was used to split both the independent variable and the labels for the dependent variable into train and testing sets. The SVC() from sklearn was used to construct the support vector machine. Versions of the SVM were also created with linear, polynomial and radial basis function kernals. The models were fit with the .fit function, and testd using the .predict() function. The accuracy of the model was printed using the accuracy_score() function. The results of the data were displayed with a confusion matrix created from code by website Edpresso (2021) and sklearn's metrics package. These included a confusion matrix (metrics.confusion_matrix) and a classification report with precision, recall, f1-scores and support (metrics.classification_report).  Results from the support vectors machines were graphed in dataframes created using Python and R Tips (2018).
 
-
-
 **Generic SVM**
 
-The first model to be tested was a generic SVM model with no modifications. 
+The first model to be tested was a generic SVM model with default settings. The generic SVM model produced an accuracy value of 0.893. Overall, the model had a precision of 0.89 and a recall of 0.88. The model had a precision of 0.90 for meadow jumping mice (*Zapus hudsonius*) and 0.89 for western jumping mice (*Zapus princeps*). There were 8 western jumping mice misclassified as meadow jumping mice (false negatives) and 5 meadow jumping mice misclassified as western jumping mice (false positives). This resulted in a lower recall score for western jumping mice (0.83) in comparison to meadow jumping mice (0.93). The generic SVM model produced a Cohen's kappa score of 0.7712, indicating a good agreement between the predicted values and the true values (Lantz, 2015, pg. 323).   
 
 
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -938,8 +1938,20 @@ The first model to be tested was a generic SVM model with no modifications.
 </table>
 </div>
 
-<div>
 
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
 </style>
 <table border="1" class="dataframe">
   <thead>
@@ -982,11 +1994,23 @@ The first model to be tested was a generic SVM model with no modifications.
 
 
 **Linear Kernel SVM**
-   
 
+The SVM with a linear kernel produced a considerably lower accuracy with a value of 0.71. This model produced a precision value of 0.73 and a recall value. This model misclassified 28 meadow jumping mice as western jumping mice, and 7 western jumping mice as meadow jumping mice. The model had a precision value of 0.87 for meadow jumping mice and a value of 0.59 for western jumping mice. This model produced a recall value of 0.62 for meadow jumping mice and a value of 0.85 for western jumping mice. The linear SVM model produced a Cohen's kappa score of 0.4371, indicating only a moderate agreement between the predicted values and the true values (Lantz, 2015, pg. 323).  
 
 <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1010,8 +2034,21 @@ The first model to be tested was a generic SVM model with no modifications.
 </table>
 </div>
 
-<div>
 
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1054,8 +2091,22 @@ The first model to be tested was a generic SVM model with no modifications.
 
 **Polynomial Kernel SVM**
 
+The SVM with a polynomial kernel produced an accuracy of 0.893, a precision value of 0.92 and a recall of 0.87. The model produced a precision of 0.86 for meadow jumping mice and a precision of 0.97 for western jumping mice. Recall values were 0.99 for meadow jumping mice and 0.74. This model misclassified 12 western jumping mice as meadow jumping mice and 1 meadow jumping mouse as a western jumping mouse. The polynomial SVM model produced a Cohen's kappa score of 0.7638, indicating a good agreement between the predicted values and the true values (Lantz, 2015, pg. 323).   
+   
 <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1080,10 +2131,20 @@ The first model to be tested was a generic SVM model with no modifications.
 </div>
 
 
-
-
 <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1126,8 +2187,22 @@ The first model to be tested was a generic SVM model with no modifications.
 
 **SVM with a Radial Basis Function**
 
-<div>
+This model produced an accuracy of 0.893, and an average precision of 0.89, and an average weighted precision of 0.88. Precision values for meadow jumping mice are 0.90 and western jumping mice are 0.89. Recall values were 0.93 for meadow jumping mice and 0.83 for western jumping mice. This model misclassified 8 western jumping mice as meadow jumping mice, and it misclassified 5 meadow jumping mice as western jumping mice. The radial-basis SVM model produced a Cohen's kappa score of 0.7712, indicating a good agreement between the predicted values and the true values (Lantz, 2015, pg. 323).  
 
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1151,9 +2226,20 @@ The first model to be tested was a generic SVM model with no modifications.
 </table>
 </div>
 
-
 <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1196,22 +2282,31 @@ The first model to be tested was a generic SVM model with no modifications.
 
 **Removing variables with high correlation from the Model**
 
-This version of the model removed several variables with a high amount of correlation. Low development had a high degree of correlation with medium development. 
+This version of the model removed several variables with a high amount of correlation. Low development had a high degree of correlation with medium development. These variables included low development, medium development, mixed forest, elevation and river distance. It turned out that elevation was associated with different habitats, with low elevations being associated with grasslands and high elevations being associated with conifer forests. As a result, elevation was not necessary. Surprisingly grasslands were strongly correlated with river distance as many meadow jumping mouse sightings were located near rivers. 
 
+**Generic SVM with Fewer Variables**
+
+This model used the generic SVM, but dropped the river distance, elevation, low development, medium development and mixed forest variables in an attempt to make a less complicated model. This model ended up producing identical results to the generic model with all attributes intact. Its accuracy was 0.8903, its precision was 0.89 and its recall was 0.88.This model produced a Cohen's kappa score of 0.7712, indicating a good agreement between the predicted values and the true values (Lantz, 2015, pg. 323).  
 
 <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>fid</th>
-      <th>bisonID</th>
       <th>Species</th>
-      <th>xcoord</th>
-      <th>ycoord</th>
-      <th>NoData</th>
-      <th>Open_water</th>
       <th>Dev_open_space</th>
       <th>Dev_high</th>
       <th>Barren_land</th>
@@ -1228,13 +2323,7 @@ This version of the model removed several variables with a high amount of correl
   <tbody>
     <tr>
       <th>0</th>
-      <td>1</td>
-      <td>1061284029</td>
       <td>Zapus princeps</td>
-      <td>-1.048927e+06</td>
-      <td>34400.810906</td>
-      <td>0</td>
-      <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
@@ -1249,13 +2338,7 @@ This version of the model removed several variables with a high amount of correl
     </tr>
     <tr>
       <th>1</th>
-      <td>2</td>
-      <td>897076990</td>
       <td>Zapus princeps</td>
-      <td>-8.852860e+05</td>
-      <td>161407.789815</td>
-      <td>0</td>
-      <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
@@ -1270,13 +2353,7 @@ This version of the model removed several variables with a high amount of correl
     </tr>
     <tr>
       <th>2</th>
-      <td>3</td>
-      <td>897077009</td>
       <td>Zapus princeps</td>
-      <td>-8.852860e+05</td>
-      <td>161407.789815</td>
-      <td>0</td>
-      <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
@@ -1291,13 +2368,7 @@ This version of the model removed several variables with a high amount of correl
     </tr>
     <tr>
       <th>3</th>
-      <td>4</td>
-      <td>897077028</td>
       <td>Zapus princeps</td>
-      <td>-8.852860e+05</td>
-      <td>161407.789815</td>
-      <td>0</td>
-      <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
@@ -1312,13 +2383,7 @@ This version of the model removed several variables with a high amount of correl
     </tr>
     <tr>
       <th>4</th>
-      <td>5</td>
-      <td>1837315390</td>
       <td>Zapus princeps</td>
-      <td>-8.850253e+05</td>
-      <td>161374.025382</td>
-      <td>0</td>
-      <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
@@ -1345,22 +2410,10 @@ This version of the model removed several variables with a high amount of correl
       <td>...</td>
       <td>...</td>
       <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
     </tr>
     <tr>
       <th>397</th>
-      <td>398</td>
-      <td>1145109121</td>
       <td>Zapus hudsonius</td>
-      <td>-7.269401e+05</td>
-      <td>-19090.725997</td>
-      <td>0</td>
-      <td>0</td>
       <td>1008</td>
       <td>0</td>
       <td>0</td>
@@ -1375,13 +2428,7 @@ This version of the model removed several variables with a high amount of correl
     </tr>
     <tr>
       <th>398</th>
-      <td>399</td>
-      <td>1145109130</td>
       <td>Zapus hudsonius</td>
-      <td>-7.269401e+05</td>
-      <td>-19090.725997</td>
-      <td>0</td>
-      <td>0</td>
       <td>1008</td>
       <td>0</td>
       <td>0</td>
@@ -1396,13 +2443,7 @@ This version of the model removed several variables with a high amount of correl
     </tr>
     <tr>
       <th>399</th>
-      <td>400</td>
-      <td>1145109134</td>
       <td>Zapus hudsonius</td>
-      <td>-7.269401e+05</td>
-      <td>-19090.725997</td>
-      <td>0</td>
-      <td>0</td>
       <td>1008</td>
       <td>0</td>
       <td>0</td>
@@ -1417,13 +2458,7 @@ This version of the model removed several variables with a high amount of correl
     </tr>
     <tr>
       <th>400</th>
-      <td>401</td>
-      <td>1145109154</td>
       <td>Zapus hudsonius</td>
-      <td>-7.269401e+05</td>
-      <td>-19090.725997</td>
-      <td>0</td>
-      <td>0</td>
       <td>1008</td>
       <td>0</td>
       <td>0</td>
@@ -1438,13 +2473,7 @@ This version of the model removed several variables with a high amount of correl
     </tr>
     <tr>
       <th>401</th>
-      <td>402</td>
-      <td>1145109161</td>
       <td>Zapus hudsonius</td>
-      <td>-7.269401e+05</td>
-      <td>-19090.725997</td>
-      <td>0</td>
-      <td>0</td>
       <td>1008</td>
       <td>0</td>
       <td>0</td>
@@ -1459,12 +2488,23 @@ This version of the model removed several variables with a high amount of correl
     </tr>
   </tbody>
 </table>
-<p>402 rows × 18 columns</p>
+<p>402 rows × 12 columns</p>
 </div>
 
-
 <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1488,10 +2528,20 @@ This version of the model removed several variables with a high amount of correl
 </table>
 </div>
 
-
-
 <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1524,7 +2574,7 @@ This version of the model removed several variables with a high amount of correl
     <tr>
       <th>4</th>
       <td>kappa</td>
-      <td>0.770</td>
+      <td>0.771</td>
     </tr>
   </tbody>
 </table>
@@ -1532,10 +2582,25 @@ This version of the model removed several variables with a high amount of correl
 
 
 
-**Reduced Variables and a Polynomial Kernel**
+**Polynomial SVM with Fewer Variables**
+
+This model was similar to the generic SVM with fewer variables, but it used a polynomial kernel. This model misclassified 7 meadow jumping mice as western jumping mice, and it misclassified 9 western jumping mice as meadow jumping mice. The model's total accuracy was 0.868, with a precision value of 0.86 and a recall value of 0.86. The model produced a precision of 0.88 for the meadow jumping mouse and 0.84 for the western jumping mouse. It produced a recall value of 0.91 for the meadow jumping mouse and a recall of 0.81 for the western jumping mouse. The SVM model produced a Cohen's kappa score of 0.720, indicating a good agreement between the predicted values and the true values (Lantz, 2015, pg. 323).  
+
 
 <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1559,11 +2624,20 @@ This version of the model removed several variables with a high amount of correl
 </table>
 </div>
 
-
-
-
 <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1606,9 +2680,63 @@ This version of the model removed several variables with a high amount of correl
 
 **Decision Tree Models**
 
+In addition to the SVM models, a decision tree was also created as these algorithms tend to be good at dealing with unbalanced (Boyle 2019). The actual decision tree model was created using code from Raschka and Mirjalili (2019) pg. 96. The graphic for the decision tree was created using code from Ptonski (2020). 
+
+**Decision Tree**
+
+The final model was a decision tree model with a Gini index and a max depth of 4. This model produced an accuracy of 0.901, with a precision of 0.93 and a recall of 0.90. For meadow jumping mice the model produced a precision of 0.89, a recall of 0.99 and misclassified 1 meadow jumping mouse as a western jumping mouse. For western jumping mice, the model produced a precision of 0.97 and a recall value of 0.81. It misclassified 9 western jumping mice as meadow jumping mice. The decision tree model produced a Cohen's kappa score of 0.820, indicating a good agreement between the predicted values and the true values (Lantz, 2015, pg. 323). Coniferous forests proved to be an important factor in classifying the mice. This makes sense as the western jumping mouse is more likely to be found in coniferous forests. Surprisingly, shrublands and barren land were also important factors in classifying the mice. 
 
 <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Z.hudsonius</th>
+      <th>Z.princeps</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>73</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>9</td>
+      <td>38</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1647,13 +2775,27 @@ This version of the model removed several variables with a high amount of correl
 </table>
 </div>
 
+    
+![png](output_90_0.png)
+    
 
 
 ### Results
 
-
 <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1766,16 +2908,20 @@ This version of the model removed several variables with a high amount of correl
 </table>
 </div>
 
-
-
-
-
-
-
-
-
 <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1865,54 +3011,79 @@ This version of the model removed several variables with a high amount of correl
 </div>
 
 
-
-**Generic SVM Model**
-
-The generic SVM model produced an accuracy value of 0.893. Overall, the model had a precision of 0.89 and a recall of 0.88. The model had a precision of 0.90 for meadow jumping mice (*Zapus hudsonius*) and 0.89 for western jumping mice (*Zapus princeps*). There were 8 western jumping mice misclassified as meadow jumping mice (false negatives) and 5 meadow jumping mice misclassified as western jumping mice (false positives). This resulted in a lower recall score for western jumping mice (0.83) in comparison to meadow jumping mice (0.93). The generic SVM model produced a Cohen's kappa score of 0.7712, indicating a good agrement between the predicted values and the true values (Lantz, 2015, pg. 323).   
-
-**Linear SVM Model**
-
-The SVM with a linear kernel produced a considerably lower accuracy with a value of 0.71. This model produced a precision value of 0.73 and a recall value. This model misclassified 28 meadow jumping mice as western jumping mice, and 7 western jumping mice as meadow jumping mice. The model had a precision value of 0.87 for meadow jumping mice and a value of 0.59 for western jumping mice. This model produced a recall value of 0.62 for meadow jumping mice and a value of 0.85 for western jumping mice. The linear SVM model produced a Cohen's kappa score of 0.4371, indicating only a moderate agrement between the predicted values and the true values (Lantz, 2015, pg. 323).  
-
-**Polynomial SVM Model**
-
-The SVM with a polynomial kernel produced an accuracy of 0.893, a precision value of 0.92 and a recall of 0.87. The model produced a precision of 0.86 for meadow jumping mice and a precision of 0.97 for western jumping mice. Recall values were 0.99 for meadow jumping mice and 0.74. This model misclassified 12 western jumping mice as meadow jumping mice and 1 meadow jumping mouse as a western jumping mouse. The polynomial SVM model produced a Cohen's kappa score of 0.7638, indicating a good agrement between the predicted values and the true values (Lantz, 2015, pg. 323).   
-
-**Radial Basis Function SVM Model**
-
-This model produced an accuracy of 0.893, and an average precision of 0.89, and an average weighted precision of 0.88. Precision values for meadow jumping mice are 0.90 and western jumping mice are 0.89. Recall values were 0.93 for meadow jumping mice and 0.83 for western jumping mice. This model misclassified 8 western jumping mice as meadow jumping mice, and it misclassified 5 meadow jumping mice as western jumping mice. The radial-basis SVM model produced a Cohen's kappa score of 0.7712, indicating a good agrement between the predicted values and the true values (Lantz, 2015, pg. 323).  
-
-**Generic SVM with Fewer Variables**
-
-This model used the generic SVM, but dropped the river distance, elevation, low development, medium development and mixed forest variables in an attempt to make a less complicated model. This model ended up producing identical results to the generic model with all attributes intact. Its accuracy was 0.8903, its precision was 0.89 and its recall was 0.88.This model produced a Cohen's kappa score of 0.7712, indicating a good agrement between the predicted values and the true values (Lantz, 2015, pg. 323).  
-
-**Polynomial SVM with Fewer Variables**
-
-This model was similar to the generic SVM with fewer variables, but it used a polynomial kernel. This model misclassified 7 meadow jumping mice as western jumping mice, and it misclassified 9 western jumping mice as meadow jumping mice. The model's total accuracy was 0.868, with a precision value of 0.86 and a recall value of 0.86. The model produced a precision of 0.88 for the meadow jumping mouse and 0.84 for the western jumping mouse. It produced a recall value of 0.91 for the meadow jumping mouse and a recall of 0.81 for the western jumping mouse. The this SVM model produced a Cohen's kappa score of 0.720, indicating a good agrement between the predicted values and the true values (Lantz, 2015, pg. 323).  
-
-**Decision Tree**
-
-The final model was a decision tree model with a Gini index and a max depth of 4. This model produced an accuracy of 0.901, with a precision of 0.93 and a recall of 0.90. For meadow jumping mice the model produced a precision of 0.89, a recall of 0.99 and misclassified 1 meadow jumping mouse as a western jumping mouse. For western jumping mice, the model produced a precision of 0.97 and a recall value of 0.81. It missclassified 9 western jumping mice as meadow jumping mice. The decision tree model produced a Cohen's kappa score of 0.820, indicating a good agrement between the predicted values and the true values (Lantz, 2015, pg. 323).  
-
 **Comparing Models**
 
 The model with th highest F1-score was the decision tree model with 0.91. The generic SVM, reduced SVM and radial-basis functions all produced values of 0.89. The polynomial model produced a value of 0.88. The model with the lowest F1-score was the linear model with 0.71. The next lowest was the polynomial SVM with a reduced number of variables. This was a value of 0.86.
-
 
 
 **Discussion**
 
 Based on F1 scores, the best model was the decision tree model, but generic model, the generic model with reduced variables and the radial-basis function were not far behind with 0.89. Overall there wasn't a large difference between models except for the linear model. The linear model performed the worst with 0.71, which is not surprising considering the data is binomial. When calculating Cohen's Kappa values, the linear model performed the worst, as expected with only a moderate level of agreement (k = 0.4371) (Lantz, 2015, pg. 323). The decision tree model performed the best (k = 0.820), indicating a very good agreement between predicted and actual values. The other models ranged from k-valued of 0.720 (reduced variable polynomial SVM) to 0.7712 (generic SVM, reduced variable SVM and the radial-basis kernel SVM). These models had a good agreement between the predicted and actual values. 
 
-Removing redundent variables had little effect on the overall effectiveness of the model. In fact, it actually produced a slightly poorer performance in the polynomial model (F1 = 0.868). False negatives are more serious in this model as *H. hudsonius* has several threatened subspecies in Colorado. So  classifying an *H. hudsonius* as an *H. princeps* (a false negative) is more serious than classifying an *H. princeps* as an *H. hudsonius* (a false positive). The model's with the fewest number of missclassified meadow jumping mice were the polynomial SVM and the decision tree models with a single missclassified meadow jumping mouse. 
+Removing redundant variables had little effect on the overall effectiveness of the model. In fact, it actually produced a slightly poorer performance in the polynomial model (F1 = 0.868). False negatives are more serious in this model as *H. hudsonius* has several threatened subspecies in Colorado. So  classifying an *H. hudsonius* as an *H. princeps* (a false negative) is more serious than classifying an *H. princeps* as an *H. hudsonius* (a false positive). The model's with the fewest number of misclassified meadow jumping mice were the polynomial SVM and the decision tree models with a single misclassified meadow jumping mouse. 
 
 The models in this project had two major issues. The first was that the data was unbalanced, which created problems in classification. Overall, there were considerably fewer data points for western jumping mice, which likely contributed to the higher number of western jumping mice being being misclassified in most models. The other major issue was the small size of the data. In most wildlife biology studies, datasets greater than 30 samples are often considered to be large enough. However, in machine learning this can create issues as most models rely on higher amounts of data. In hindsight, testing the model on species with more data points may have produced better results. 
 
-Several variables did have redudencies. Elevation was strongly correlated with both grasslands and coniferous forests. This makes sense because coniferous forests are found at higher elevations than grasslands. There was also a strong correlation between river distances and grasslands. This makes sense because the meadow jumping mouse is generally found in the wetlands and grasslands found within 340-meters of water (Trainor et. al. 2012). 
+Several variables did have redundancies. Elevation was strongly correlated with both grasslands and coniferous forests. This makes sense because coniferous forests are found at higher elevations than grasslands. There was also a strong correlation between river distances and grasslands. This makes sense because the meadow jumping mouse is generally found in the wetlands and grasslands found within 340-meters of water (Trainor et. al. 2012). 
 
 **Using K-fold Cross Validation**
 
-K-fold cross validation is frequently used as a technique for dealing with unbalanced data. K-fold cross validation was developed from code by scikit-learn developers (2020) and was used on the two reduced models. However, these models were not able to produce higher values for accuracy and F1-values than their counterparts. The most promising of these models was the cross-validated polynomial SVM, which produced a mean accuracy of 0.878 and a mean F1-value of 0.870.
+K-fold cross validation is frequently used as a technique for dealing with unbalanced data (Boyle 2019). K-fold cross validation was developed from code by scikit-learn developers (2020) and was used on the two reduced models. However, these models were not able to produce higher values for accuracy and F1-values than their counterparts. The most promising of these models was the cross-validated polynomial SVM, which produced a mean accuracy of 0.878 and a mean F1-value of 0.870. Surprisingly the decision tree model with cross-fold validation did not outperform the polynomial SVM. It had an accuracy of 0.876 and an F-1 score of 0.865. 
+
+#### Cross Validation for the SVM with reduced variables and a Polynomial Kernel 
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Model</th>
+      <th>mean accuracy</th>
+      <th>F-1 Score</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>K-fold SVM</td>
+      <td>0.851</td>
+      <td>0.843</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>K-fold Polynomial SVM</td>
+      <td>0.878</td>
+      <td>0.870</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>K-fold Decision Tree</td>
+      <td>0.876</td>
+      <td>0.865</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+**Possible Concerns**
+
+One of the concerns with this model is that it might be good at identifying the meadow jumping mice simply because there are so many samples of them in the data. Nearly all of the models had issues with identifying the western jumping mice with 7-9 of them being misclassified as meadow jumping mice. In the future, this technique should be tested on species with more data points to see if the misclassification issues are real or simply a product of small sample sizes. In addition, techniques such as under-sampling the larger class could be used to try and make the data more balanced between samples. 
 
 **Bibliography**
 
@@ -1930,11 +3101,15 @@ Anita, Okoh (August 20th, 2019) Seaborn Heatmaps: 13 Ways to Customize Correlati
 
 scikit-learn developers (2007-2020) 3.1. Cross-validation: evaluating estimator performance. Retrieved from: https://scikit-learn.org/stable/modules/cross_validation.html
 
+Boyle, Tara (February 3rd, 2019) *Dealing with Imbalanced Data: A guide to effectivly handling imbalanced datasets in Python*. [Towards Data Science] Retrieved from: https://towardsdatascience.com/methods-for-dealing-with-imbalanced-data-5b761be45a18
+
 Raschka, Sebastian and Vahid Mirjalili (2019) *Python Machine Learning Third Edition*. Packt Publishing Ltd.
 
 Chen, Daniel y. (2018) *Pandas for Everyone: Python Data Analysis*. Pearson Education, Inc. 
 
 Lantz, Brett () *Machine Learning with R: Second Edition*. Packt Publishing Ltd.
+
+Ptonski, Piotr (June 22, 2020) Visualize a Decision Tree in 4 Ways with Scikit-Learn and Python [mljar] Retrieved from: https://mljar.com/blog/visualize-decision-tree/ 
 
 DMNS Mammal Collection (Arctos). Denver Museum of Nature and Science. Accessed through Biodiversity Information Serving Our Nation (BISON) (n.d.) Zapus hudsonius prebli [Data File] Retrieved from https://bison.usgs.gov/#home on 1/16/2021
 
@@ -2022,3 +3197,7 @@ ColoradoView/UV-B Monitoring and Research (n.d.) Colorado Digital Elevation Mode
 
 
 
+
+```python
+
+```
