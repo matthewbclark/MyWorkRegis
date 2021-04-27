@@ -2924,7 +2924,7 @@ However, animals do not pose for pictures, and it is possible that the angle of 
 
 The goal of this assignment is to determine if the position of the animal and the type of Keras architecture affects the ability of a CNN to identify an animal. Data will be obtained from three datasets, Snapshot Karoo: Season 1, Snapshot Camdeboo: Season 1 and Snapshot Kgalagadi: Season 1. These datasets are part of the Snapshot Safari program and are available through the Labeled Information Library of Alexandria (LILA BC) (n.d.). This lab will look at three categories of South African herbivore, the bull greater kudu (*Tragelaphus strepsiceros*), the cow eland (*Taurotragus oryx*) and mountain zebra (*Equus zebra*). Datasets will include a control dataset, in which all data for each category of antelope will be included in a single file, and an experimental dataset in which the data for each category is separated by front, rear and side views of the animal. The performance of both the control group and the experimental group will be assessed to determine the effectiveness of the algorithm.
 
-In addition, the performance of the CNN on the control and experimental groups will be tested using a sequential neural network with several different Keras applications. These will include the ResNet101 architecture, the MobileNet architecture and the VGG16 architecture. The accuracy of the algorithm in identifying individual categories, a confusion matrix will also be produced to see which categories the algorithm has difficulty identifying. 
+In addition, the performance of the CNN on the control and experimental groups will be tested using a sequential neural network with several different Keras applications. These will include the ResNet101 architecture and the VGG16 architecture. The accuracy of the algorithm in identifying individual categories, a confusion matrix will also be produced to see which categories the algorithm has difficulty identifying. 
 
 This lab will utilize code created by Iftekher Mamum (2019). This code was chosen for its ability to quickly iterate through epochs, its higher accuracy and the ease at which it can create and display a confusion matrix. Its use of the VGG16 algorithm worked out well for this practicum because this architecture possesses fewer layers (Mamun 2016) and this allowed it to run quickly. Due to the pandemic, only local internet resources could be used, which were prone to going offline at inoppurtune times. This model allowed the code to be run and tested in about an hour, which allowed for more experimentation with the code. 
 
@@ -3008,6 +3008,11 @@ Labeled Information Library of Alexandria (LILA BC) (n.d.) Snapshot Kgalagadi (S
 Labeled Information Library of Alexandria (LILA BC) (n.d.) Snapshot Camdeboo (Season 1). Retrieved from: http://lila.science/datasets/snapshot-camdeboo
 
 Labeled Information Library of Alexandria (LILA BC) (n.d.) Snapshot Karoo (Season 1). Retrieved from: http://lila.science/datasets/snapshot-karoo
+
+Ahumada, Jorge A., Regraus, Eric, Birch, Tanya, Flores, Nicole, Kays, Roland, O’Brien, Timothy G., Palmer, Jonathan, Palmer, Stephanie, Schuttler, Stephanie, Zhao, Jennifer Y., Jetz, Walter, Kinnaird, Margaret, Kulkarni, Sayali, Lyet, Arnaud, Thau, David, Duong, Michelle, Olive, Ruth, and Dancer, Anthony (2019) Wildlife Insights: A Platform to Maximize the Potential of Camera Trap and Other Passive Sensor Wildlife Data for the Planet. Environmental Conservation page 1 of 6. Doi: 10.1017/S0376892919000298
+![image](https://user-images.githubusercontent.com/55359219/116190785-7b86fe00-a6e8-11eb-803d-6ce8850b8d0c.png)
+
+
 
 ```python
 
