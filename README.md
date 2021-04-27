@@ -2958,6 +2958,7 @@ The control model ran for 30 epochs and achieved a validation accuracy of 91.88%
 ![image](Experimental_TV_AV_Table.png)
 
 **Experimental Summary**
+
 ![image](Experimental_Classification_Report.png)
 
 ![image](Experimental_Confusion_Matrix.png)
@@ -2984,10 +2985,11 @@ One of the issues that this experiment had was that the data was very unbalanced
 
 **The confusion matrix for the ResNet101 model for the control group.**
 
-
+![image](Control_Classification_Report_ResNet101.png)
 
 **The confusion matrix for the ResNet101 model for the experimental group.**
 
+![image](Control_Confusion_Matrix_ResNet101.png)
 
 The ResNet101 architecture benefits from additional hidden layers and can potentially perform better on more complex datasets (Mamun 2019). However, this model was not able to produce better results, with the control model producing an accuracy of 0.6382 and a loss of 0.7943 and the experimental model producing an accuracy of 0.325 and a loss of 1.943. Control algorithm classified 51% of the images with the eland correctly, with 7% classified as kudu bulls and 42% were classified as a mountain zebra. 46% of kudu bulls were classified correctly by the algorithm, with 40% classified as elands and 14% were classified as mountain zebras. The only animal with a high success rate was the mountain zebra with 90% being classified correctly. Only 1% were classified as a bull kudu and 9% were classified as an eland.
 
