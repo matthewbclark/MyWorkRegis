@@ -2943,15 +2943,24 @@ Like the model originally created for this project, Mamun (2019) used a CNN call
 
 **Control Validation Accuracy and Loss:**
 
+![image](Control_TV_AV_Table.png)
+
 **Control Summary:** 
 
-![Control_Classification_Report.png](MyWorkRegis/Control_Classification_Report)
+![image](Control_Classification_Report.png)
+
+![image](Control_Confusion_Matrix.png)
 
 The control model ran for 30 epochs and achieved a validation accuracy of 91.88% and a loss of 0.271. Overall, the training and validation accuracy of the model began to plateau around 19 epochs. The testing accuracy for the 93.1% and a loss of 0.3344. The model produced a precision of 0.92 for the eland, 0.90 for the kudu bull and 0.97 for the mountain zebra. Overall, 92% of the images for the eland were classified correctly. 7% of the images were classified as a kudu bull and 1% were classified as a zebra. 95% of the images for the kudu bull were classified correctly, with 4% classified as the eland and 1% classified as a mountain zebra. 93% of the images for the mountain zebra were classified correctly, while 5% were classified as elands and 3% were classified as a bull kudu. 
 
 **Experimental Training and Validation Accuracy**
 
+![image](Experimental_TV_AV_Table.png)
+
 **Experimental Summary**
+![image](Experimental_Classification_Report.png)
+
+![image](Experimental_Confusion_Matrix.png)
 
 The experimental data produced a validation accuracy of 74.23% and a loss of 1.164. This model appeared to plateau in accuracy and loss at around 25 epochs, but this may reflect a local minimum. With the experimental data, the model produced a test accuracy of 78.19% and a loss of 0.8606. For the eland, the model produced a precision of 0.84 for the side view, 0.60 for the rear view and 0.78 for the front view. For the greater kudu bull, the model produced a precision of 0.85 for the side view, 0.82 for the rear view and 0.86 for the front view. For the mountain zebra, the model produced a precision of 0.81 for the side view, 0.75 for the front and 1.00 for the rear.
 
