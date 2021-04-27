@@ -2926,7 +2926,7 @@ The goal of this assignment is to determine if the position of the animal and th
 
 In addition, the performance of the CNN on the control and experimental groups will be tested using a sequential neural network with several different Keras applications. These will include the ResNet101 architecture, the MobileNet architecture and the VGG16 architecture. The accuracy of the algorithm in identifying individual categories, a confusion matrix will also be produced to see which categories the algorithm has difficulty identifying. 
 
-This lab will utilize code created by Iftekher Mamum (2019). This code was chosen for its ability to quickly iterate through epochs, its higher accuracy and the ease at which it can create and display a confusion matrix. 
+This lab will utilize code created by Iftekher Mamum (2019). This code was chosen for its ability to quickly iterate through epochs, its higher accuracy and the ease at which it can create and display a confusion matrix. Its use of the VGG16 algorithm worked out well for this practicum because this architecture possesses fewer layers (Mamun 2016) and this allowed it to run quickly. Due to the pandemic, only local internet resources could be used, which were prone to going offline at inoppurtune times. This model allowed the code to be run and tested in about an hour, which allowed for more experimentation with the code. 
 
 **METHODS:**
 
@@ -2934,63 +2934,12 @@ The final dataset was not a balanced dataset because most pictures of the animal
 
 The model created by Iftekher Mamun (2019) resizes the images to a size of 224 by 224 pixels, an image size chose was also to make the model compatible with the VGG16 architecture that would be used by its convolutional neural network. and converts images into a numpy array which is loaded into a bottleneck file for the training, validation and testing data to use. This numpy array is built from the number associated with each pixel in the photo. The data generators then prepare the data for the convolutional network and most importantly create the labels needed for the confusion matrix to work. This is the key difference between Mamun’s code and the code I originally created, as this was the code that finally allowed me to create the labels needed to build the confusion matrix. The matrix needs a set of easily accessible labels to compare the to the model’s predictions. The model does this by converting the numpy array used in the bottleneck file into a categorical variable that can be used for the labels. Basically, it is a set of dummy variables used to create labels for the machine learner. The model was originally designed to run with 7 epochs and a batch size of 50 (Mamun 2019). However, the number of epochs was increased to 30 in this experiment, and the batch size reduced to 10 as the datasets used were smaller than the animal-10 dataset from Kaggle. The architecture used for the project was the VGG16 algorithm.
 
-VGG16 Algorithm:
-Model: "vgg16"
-_________________________________________________________________
-Layer (type)                 Output Shape              Param #   
-=================================================================
-input_2 (InputLayer)         [(None, None, None, 3)]   0         
-_________________________________________________________________
-block1_conv1 (Conv2D)        (None, None, None, 64)    1792      
-_________________________________________________________________
-block1_conv2 (Conv2D)        (None, None, None, 64)    36928     
-_________________________________________________________________
-block1_pool (MaxPooling2D)   (None, None, None, 64)    0         
-_________________________________________________________________
-block2_conv1 (Conv2D)        (None, None, None, 128)   73856     
-_________________________________________________________________
-block2_conv2 (Conv2D)        (None, None, None, 128)   147584    
-_________________________________________________________________
-block2_pool (MaxPooling2D)   (None, None, None, 128)   0         
-_________________________________________________________________
-block3_conv1 (Conv2D)        (None, None, None, 256)   295168    
-_________________________________________________________________
-block3_conv2 (Conv2D)        (None, None, None, 256)   590080    
-_________________________________________________________________
-block3_conv3 (Conv2D)        (None, None, None, 256)   590080    
-_________________________________________________________________
-block3_pool (MaxPooling2D)   (None, None, None, 256)   0         
-_________________________________________________________________
-block4_conv1 (Conv2D)        (None, None, None, 512)   1180160   
-_________________________________________________________________
-block4_conv2 (Conv2D)        (None, None, None, 512)   2359808   
-_________________________________________________________________
-block4_conv3 (Conv2D)        (None, None, None, 512)   2359808   
-_________________________________________________________________
-block4_pool (MaxPooling2D)   (None, None, None, 512)   0         
-_________________________________________________________________
-block5_conv1 (Conv2D)        (None, None, None, 512)   2359808   
-_________________________________________________________________
-block5_conv2 (Conv2D)        (None, None, None, 512)   2359808   
-_________________________________________________________________
-block5_conv3 (Conv2D)        (None, None, None, 512)   2359808   
-_________________________________________________________________
-block5_pool (MaxPooling2D)   (None, None, None, 512)   0         
-=================================================================
-Total params: 14,714,688
-Trainable params: 14,714,688
-Non-trainable params: 0
-_________________________________________________________________
-VGG base summary: None
-
 **Creating the Confusion Matrix**
 
 Like the model originally created for this project, Mamun (2019) used a CNN called a sequential neural network. This used transfer learning to incorporate the VGG16 architecture. The initial layers forming the top of the model was set to false to avoid incorporating it into the model, and the weights were set to ‘imagenet’ as per Mamun (2019). The model flattened the data and included three hidden layers. The first two use a with 100 nodes and the second with 50 nodes, and both use a LeakyRelu activation function. The model incorporates two dropout layers, one with a dropout of 0.5 and one with a dropout of 0.3. A softmax activation function was used on the final hidden layer as it is a classification-based model (Chollet 2018).
 
 
 **RESULTS**
-
-
 
 **Control Validation Accuracy and Loss:**
 
