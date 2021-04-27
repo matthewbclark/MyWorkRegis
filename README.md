@@ -2910,6 +2910,8 @@ ColoradoView/UV-B Monitoring and Research (n.d.) Colorado Digital Elevation Mode
 
 ColoradoView/UV-B Monitoring and Research (n.d.) Colorado Digital Elevation Model files - 1 degree: Section 4-7. [Data File] Retrieved from: https://www.coloradoview.org/aerial-imagery/ on 2/06/2021
 
+
+
 **SECOND PRACTICUM PROJECT**
 
 **Using Sequential Neural Networks and Transfer Learning to Assess Biodiversity at Karoo National Park, South Africa**
@@ -2931,6 +2933,55 @@ This lab will utilize code created by Iftekher Mamum (2019). This code was chose
 The final dataset was not a balanced dataset because most pictures of the animals were of the side view rather than views from the front or the rear. Diagonal animals are hard to classify so an effort was made to use pictures with a clear enough difference in the position of the animal. The dataset ended up having 788 total images. The experimental dataset ended up with fewer images, with 773, and it not clear why this is. Unfortunately, this error was discovered very late in the project’s process and there was not enough time to fix it. In the control dataset, the cow eland had 277 training images, 69 validation images and 86 test images for 432 images total. The bull greater kudu had 257 training images, 64 validation images and 80 test images for 401 images total. The data for the mountain zebra 254 training images, 64 validation images and 80 testing images. The experimental dataset included separate categories for the side, front and rear views of the animal. The side view of the cow eland included 182 training images, 46 validation images and 57 test images for a total of 285 images. The front view of the cow eland had 57 training images, 14 validation images and 18 testing images for a total of 89 images. The rear view of the cow eland had 37 training images, 9 validation images and 12 testing images for a total of 58 images. The side view of the bull greater kudu had 182 training images, 46 validation images and 57 test images for 285 total images. The front view had 46 training images, 11 validation images and 14 testing images for 71 total images. The rear view had 26 training images, 8 validation images and 10 testing images for a total of 44 total images. The mountain zebra’s side view had 165 training images, 41 validation images and 51 testing images for 257 total images. The front view of the mountain zebra had 48 training images 13 validation images and 15 testing images with a total of 75 images. The mountain zebra’s rear view had 28 training images, 7 validation images and 9 testing images. The data was divided by a 64%/16%/20% train/validation/test split using methods from Shah (2017). 
 
 The model created by Iftekher Mamun (2019) resizes the images to a size of 224 by 224 pixels, an image size chose was also to make the model compatible with the VGG16 architecture that would be used by its convolutional neural network. and converts images into a numpy array which is loaded into a bottleneck file for the training, validation and testing data to use. This numpy array is built from the number associated with each pixel in the photo. The data generators then prepare the data for the convolutional network and most importantly create the labels needed for the confusion matrix to work. This is the key difference between Mamun’s code and the code I originally created, as this was the code that finally allowed me to create the labels needed to build the confusion matrix. The matrix needs a set of easily accessible labels to compare the to the model’s predictions. The model does this by converting the numpy array used in the bottleneck file into a categorical variable that can be used for the labels. Basically, it is a set of dummy variables used to create labels for the machine learner. The model was originally designed to run with 7 epochs and a batch size of 50 (Mamun 2019). However, the number of epochs was increased to 30 in this experiment, and the batch size reduced to 10 as the datasets used were smaller than the animal-10 dataset from Kaggle. The architecture used for the project was the VGG16 algorithm.
+
+VGG16 Algorithm:
+Model: "vgg16"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_2 (InputLayer)         [(None, None, None, 3)]   0         
+_________________________________________________________________
+block1_conv1 (Conv2D)        (None, None, None, 64)    1792      
+_________________________________________________________________
+block1_conv2 (Conv2D)        (None, None, None, 64)    36928     
+_________________________________________________________________
+block1_pool (MaxPooling2D)   (None, None, None, 64)    0         
+_________________________________________________________________
+block2_conv1 (Conv2D)        (None, None, None, 128)   73856     
+_________________________________________________________________
+block2_conv2 (Conv2D)        (None, None, None, 128)   147584    
+_________________________________________________________________
+block2_pool (MaxPooling2D)   (None, None, None, 128)   0         
+_________________________________________________________________
+block3_conv1 (Conv2D)        (None, None, None, 256)   295168    
+_________________________________________________________________
+block3_conv2 (Conv2D)        (None, None, None, 256)   590080    
+_________________________________________________________________
+block3_conv3 (Conv2D)        (None, None, None, 256)   590080    
+_________________________________________________________________
+block3_pool (MaxPooling2D)   (None, None, None, 256)   0         
+_________________________________________________________________
+block4_conv1 (Conv2D)        (None, None, None, 512)   1180160   
+_________________________________________________________________
+block4_conv2 (Conv2D)        (None, None, None, 512)   2359808   
+_________________________________________________________________
+block4_conv3 (Conv2D)        (None, None, None, 512)   2359808   
+_________________________________________________________________
+block4_pool (MaxPooling2D)   (None, None, None, 512)   0         
+_________________________________________________________________
+block5_conv1 (Conv2D)        (None, None, None, 512)   2359808   
+_________________________________________________________________
+block5_conv2 (Conv2D)        (None, None, None, 512)   2359808   
+_________________________________________________________________
+block5_conv3 (Conv2D)        (None, None, None, 512)   2359808   
+_________________________________________________________________
+block5_pool (MaxPooling2D)   (None, None, None, 512)   0         
+=================================================================
+Total params: 14,714,688
+Trainable params: 14,714,688
+Non-trainable params: 0
+_________________________________________________________________
+VGG base summary: None
 
 **Creating the Confusion Matrix**
 
