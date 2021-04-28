@@ -1,5 +1,7 @@
 **Practicum 2: Using Sequential Neural Networks and Transfer Learning to Assess Biodiversity at Karoo National Park, South Africa**
 
+**Matthew Clark**
+
 **INTRODUCTION**
 
 Camera traps offer an unprecedented method to gain a large amount of data on wildlife in a noninvasive manner. Camera traps are remotely triggered cameras that use motion sensors to take photos when animals walk by. Camera traps also present a great opportunity for harnessing big data in wildlife biology (Ahumada et. al. 2019). However, a limitation of this type of data is the time needed to identify the animals in the images. This is where convolutional neural networks come in as these machine learning algorithms can quickly identify large numbers of images. 
