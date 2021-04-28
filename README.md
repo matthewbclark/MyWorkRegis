@@ -100,10 +100,9 @@ Labeled Information Library of Alexandria (LILA BC) (n.d.) Snapshot Camdeboo (Se
 Labeled Information Library of Alexandria (LILA BC) (n.d.) Snapshot Karoo (Season 1). Retrieved from: http://lila.science/datasets/snapshot-karoo
 
 Ahumada, Jorge A., Regraus, Eric, Birch, Tanya, Flores, Nicole, Kays, Roland, O’Brien, Timothy G., Palmer, Jonathan, Palmer, Stephanie, Schuttler, Stephanie, Zhao, Jennifer Y., Jetz, Walter, Kinnaird, Margaret, Kulkarni, Sayali, Lyet, Arnaud, Thau, David, Duong, Michelle, Olive, Ruth, and Dancer, Anthony (2019) Wildlife Insights: A Platform to Maximize the Potential of Camera Trap and Other Passive Sensor Wildlife Data for the Planet. Environmental Conservation page 1 of 6. Doi: 10.1017/S0376892919000298
-![image](https://user-images.githubusercontent.com/55359219/116190785-7b86fe00-a6e8-11eb-803d-6ce8850b8d0c.png)
 
 Flovik, Vegard (February 28th, 2020) Deep Transfer Learning for Images Classification: A step-by-step tutorial from data import to accuracy evaluation [Towards Data Science] Retrieved from: https://towardsdatascience.com/deep-transfer-learning-for-image-classification-f3c7e0ec1a14
-![image](https://user-images.githubusercontent.com/55359219/116335206-af6b2d80-a793-11eb-99ac-f256f883dd4e.png)
+
 
 
 
